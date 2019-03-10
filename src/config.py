@@ -1,4 +1,4 @@
-BASE_PATH = 'D:\\5-project\\icpc-cli\\test'
+BASE_PATH = ''
 CF_PATH = 'CodeForces'
 
 OJ_PATH = {

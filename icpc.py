@@ -4,9 +4,61 @@ from src.config import *
 from util import mkdir, mkfile, cpfile, execTest
 
 @click.group()
-def cli():
-    # click.echo(click.style('Hello World!', fg='green'))
-    pass
+@click.pass_context
+def cli(ctx):
+    if not BASE_PATH:
+        click.echo('Your base path:')
+
+        stdin = click.get_text_stream('stdin')
+        s = stdin.readline().strip()
+
+        while True:
+            if not os.path.isabs(s):
+                click.secho('Not a absolute path!', fg='red')
+                click.echo('Your base path:')
+                s = stdin.readline().strip()
+            elif not os.path.isdir(s):
+                click.secho('Not a directory!', fg='red')
+                click.echo('Your base path:')
+                s = stdin.readline().strip()
+            else:
+                break
+
+        ctx.invoke(config, base_path=s)
+
+@cli.command('config', short_help='show config file path')
+@click.option('--base-path', help='set the base path')
+def config(base_path):
+    """
+    Show config file path.
+    """
+    global BASE_PATH
+
+    if base_path and base_path == BASE_PATH:
+        return
+
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'config.py')
+
+    click.echo('config file => %s' % config_path)
+
+    if base_path:
+        cfg = []
+        with click.open_file(config_path, 'r') as fin:
+            cfg = fin.readlines()
+        
+        for i in range(len(cfg)):
+            if cfg[i].strip()[0] == '#':
+                continue
+            if cfg[i].find('BASE_PATH') != -1:
+                cfg[i] = "BASE_PATH = r'%s'\n" % base_path
+                break
+        
+        with click.open_file(config_path, 'w') as f:
+            f.writelines(cfg)
+
+        BASE_PATH = base_path
+
+        click.echo('BASE_PATH => %s' % base_path)
 
 @cli.command('init', short_help='init a contest folder')
 @click.argument('contest')
@@ -141,6 +193,9 @@ def test(problem, input, output, max_print, no_print, time_limit):
 @cli.command('submit', short_help='submit your code')
 def submit():
     click.secho('submit', fg='green')
+
+    stdin = click.get_text_stream('stdin')
+    a = stdin.readline()
 
 if __name__ == '__main__':
     cli()
