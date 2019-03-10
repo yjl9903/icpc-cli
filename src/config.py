@@ -1,4 +1,10 @@
 BASE_PATH = 'D:\\5-project\\icpc-cli\\test'
+CF_PATH = 'CodeForces'
+
+CF_NUMBER = 5 
+# cf contest problem number
+STANDARD_NUMBER = 11
+# icpc contest problem number
 
 FOLDERS = [
     {
@@ -17,10 +23,10 @@ FOLDERS = [
     {
         'name': '.vscode',
         'src_files': [
-            'D:\\cpp\\.vscode\\c_cpp_properties.json',
-            'D:\\cpp\\.vscode\\launch.json',
-            'D:\\cpp\\.vscode\\tasks.json',
-            'D:\\cpp\\.vscode\\settings.json',
+            '.\\.vscode\\c_cpp_properties.json',
+            '.\\.vscode\\launch.json',
+            '.\\.vscode\\tasks.json',
+            '.\\.vscode\\settings.json',
         ]
     }
 ]
@@ -28,6 +34,6 @@ FOLDERS = [
 FILES = [
     {
         'name': 'init.cpp',
-        'src': 'D:\\cpp\\init.cpp'
+        'src': '.\\init.cpp'
     }
 ]
