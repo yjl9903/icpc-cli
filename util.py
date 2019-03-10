@@ -45,7 +45,7 @@ def cpfile(*args, **kwargs):
     shutil.copy(src, dst)
 
     if 'no-print' not in kwargs:
-        print('copying file from %s => %s' % (src, dst))
+        print('copying file => %s' % os.path.join(dst, os.path.split(src)[1]))
 
 def setTimeLimit(maxTime):
     def wrapper(func):

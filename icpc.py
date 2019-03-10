@@ -1,6 +1,5 @@
 import click
 import os
-# from src.config import BASE_PATH, FOLDERS, FILES, CF_PATH, CF_NUMBER, STANDARD_NUMBER, OJ_PATH, DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_PATH
 from src.config import *
 from util import mkdir, mkfile, cpfile, execTest
 
@@ -9,13 +8,16 @@ def cli():
     # click.echo(click.style('Hello World!', fg='green'))
     pass
 
-@cli.command()
+@cli.command('init', short_help='init a contest folder')
 @click.argument('contest')
-@click.option('--codeforces', '-cf', is_flag=True, default=False)
-@click.option('--folder', '-f', type=str, default='')
-@click.option('--number', '-n', type=int, default=CF_NUMBER)
-@click.option('--standard', '-s', is_flag=True, default=False)
+@click.option('--codeforces', '-cf', is_flag=True, default=False, help='Create a Codeforces contest')
+@click.option('--folder', '-f', type=str, default='', help='Create a contest in this folder')
+@click.option('--number', '-n', type=int, default=CF_NUMBER, help='Number of problems')
+@click.option('--standard', '-s', is_flag=True, default=False, help='Create an ICPC contest')
 def init(contest, codeforces, folder, number, standard):
+    """
+    Init a contest folder with Visual Studio Code environment and necessary files.
+    """
     click.secho('init %s...' % contest, fg='green')
 
     if folder and codeforces:
@@ -44,7 +46,7 @@ def init(contest, codeforces, folder, number, standard):
         if 'name' not in item:
             raise Exception('FILES configure loses a name')
         if 'src' in item:
-            cpfile(path, item['name'], src=item['src'])
+            cpfile(path, src=item['src'])
         else:
             mkfile(path, file=item['name'])
 
@@ -58,11 +60,14 @@ def init(contest, codeforces, folder, number, standard):
 
     os.system('code ' + path)
 
-@cli.command()
+@cli.command('open', short_help='open a contest folder')
 @click.argument('contest')
 @click.option('--codeforces', '-cf', is_flag=True, default=False)
 @click.option('--folder', '-f', type=str, default='')
 def open(contest, codeforces, folder):
+    """
+    Open a contest folder.
+    """
     click.secho('open %s...' % (contest), fg='green')
 
     if folder and codeforces:
@@ -77,11 +82,14 @@ def open(contest, codeforces, folder):
     click.echo('contest folder => %s' % path)
     os.system('code ' + path)
     
-@cli.command()
+@cli.command('write', short_help='write a new problem')
 @click.argument('contest')
 @click.argument('problem')
 def write(contest, problem):
-    click.secho('write %s => %s' % (contest, problem), fg='green')
+    """
+    Write a new problem in a contest.
+    """
+    click.secho('write %s => %s...' % (contest, problem), fg='green')
 
     if contest and contest in OJ_PATH:
         contest = OJ_PATH[contest]
@@ -93,7 +101,7 @@ def write(contest, problem):
     os.system('code ' + path)
     os.system('code ' + os.path.join(path, problem))
 
-@cli.command()
+@cli.command('test', short_help='test your code')
 @click.argument('problem')
 @click.option('--input', '-i', default=DEFAULT_INPUT)
 @click.option('--output', '-o', default=DEFAULT_OUTPUT)
@@ -101,7 +109,10 @@ def write(contest, problem):
 @click.option('--no-print', '-n', is_flag=True, default=False)
 @click.option('--time-limit', '-t', is_flag=True, default=False)
 def test(problem, input, output, max_print, no_print, time_limit):
-    click.secho('Testing => %s' % (problem.rstrip('.exe')), fg='green')
+    """
+    Test your code.
+    """
+    click.secho('Testing => %s...' % (problem.rstrip('.exe')), fg='green')
 
     input = os.path.join(DATA_PATH, input)
     output = os.path.join(DATA_PATH, output)
@@ -127,7 +138,7 @@ def test(problem, input, output, max_print, no_print, time_limit):
     if time_limit:
         click.echo('Time: %dms' % t)
 
-@cli.command()
+@cli.command('submit', short_help='submit your code')
 def submit():
     click.secho('submit', fg='green')
 

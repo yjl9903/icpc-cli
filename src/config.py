@@ -14,7 +14,10 @@ STANDARD_NUMBER = 11
 
 FOLDERS = [
     {
-        'name': 'debug'
+        'name': 'debug',
+        'src_files': [
+            '.\\debug\\test.bat'
+        ]
     },
     {
         'name': 'input',
