@@ -19,6 +19,8 @@ def init(contest, codeforces, folder, number, standard):
 
     if folder and codeforces:
         raise Exception('init conflict!')
+    if codeforces:
+        folder = CF_PATH
 
     path = os.path.join(BASE_PATH, folder, contest)
     mkdir(path)
@@ -51,14 +53,25 @@ def init(contest, codeforces, folder, number, standard):
     for i in range(number):
         mkfile(path, file=chr(i + ord('a')) + '.cpp')
 
-
+    os.system('code ' + path)
 
 @cli.command()
 @click.argument('contest')
-def open(contest):
-    click.echo('open %s' % (contest))
-    
+@click.option('--codeforces', '-cf', is_flag=True, default=False)
+@click.option('--folder', '-f', type=str, default='')
+def open(contest, codeforces, folder):
+    click.secho('open %s...' % (contest), fg='green')
 
+    if folder and codeforces:
+        raise Exception('open conflict!')
+    if codeforces:
+        folder = CF_PATH
+
+    path = os.path.join(BASE_PATH, folder, contest)
+        
+    click.echo('contest folder => %s' % path)
+    os.system('code ' + path)
+    
 @cli.command()
 def test():
     click.echo('test')
