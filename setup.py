@@ -12,5 +12,8 @@ setup(
     entry_points='''
         [console_scripts]
         icpc=icpc:cli
+        init=icpc:init
+        open=icpc:open
+        test=icpc:test
     '''
 )
