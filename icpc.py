@@ -1,7 +1,8 @@
 import click
 import os
-from src.config import BASE_PATH, FOLDERS, FILES, CF_PATH, CF_NUMBER, STANDARD_NUMBER, OJ_PATH
-from util import mkdir, mkfile, cpfile
+# from src.config import BASE_PATH, FOLDERS, FILES, CF_PATH, CF_NUMBER, STANDARD_NUMBER, OJ_PATH, DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_PATH
+from src.config import *
+from util import mkdir, mkfile, cpfile, execTest
 
 @click.group()
 def cli():
@@ -93,8 +94,38 @@ def write(contest, problem):
     os.system('code ' + os.path.join(path, problem))
 
 @cli.command()
-def test():
-    click.secho('test', fg='green')
+@click.argument('problem')
+@click.option('--input', '-i', default=DEFAULT_INPUT)
+@click.option('--output', '-o', default=DEFAULT_OUTPUT)
+@click.option('--max-print', '-m', type=int, default=DEFAULT_OUTPUT_SIZE)
+@click.option('--no-print', '-n', is_flag=True, default=False)
+@click.option('--time-limit', '-t', is_flag=True, default=False)
+def test(problem, input, output, max_print, no_print, time_limit):
+    click.secho('Testing => %s' % (problem.rstrip('.exe')), fg='green')
+
+    input = os.path.join(DATA_PATH, input)
+    output = os.path.join(DATA_PATH, output)
+
+    s, t = execTest(problem, input, time_limit)
+
+    with click.open_file(output, 'w') as f:
+        f.write(s)
+
+    if no_print:
+        return
+
+    if max_print == -1:
+        click.echo(s)
+    else:
+        s = s.split('\n')
+        for item in s[:max_print]:
+            click.echo(item)
+        rest = len(s) - max_print
+        if rest > 0:
+            click.echo('<%d lines in %s>' % (rest, input))
+
+    if time_limit:
+        click.echo('Time: %dms' % t)
 
 @cli.command()
 def submit():

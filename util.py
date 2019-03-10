@@ -1,6 +1,8 @@
 import sys
 import os
 import shutil
+import time
+from threading import Thread
 
 ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 
@@ -44,4 +46,40 @@ def cpfile(*args, **kwargs):
 
     if 'no-print' not in kwargs:
         print('copying file from %s => %s' % (src, dst))
+
+def setTimeLimit(maxTime):
+    def wrapper(func):
+        def _wrapper(*args, **kw):
+            class LimitTime(Thread):
+                def __init__(self):
+                    Thread.__init__(self)
+                def run(self):
+                    func(*args, **kw)
+                def stop(self):
+                    if self.is_alive():
+                        Thread._Thread__stop(self)
+            t = LimitTime()
+            start = time.time()
+            t.start()
+            t.join(timeout=maxTime)
+            end = time.time()
+            last = 1000 * (end - start)
+            if t.is_alive():
+                t.stop()
+            return last
+        return _wrapper
+    return wrapper
+
+def execTest(problem, input, time):
+    if not time:
+        return os.popen('%s <%s' % (problem, input)).read().strip(), 0
+        
+    output = ['']
+
+    @setTimeLimit(20 * 1000)
+    def fun():
+        output[0] = os.popen('%s <%s' % (problem, input)).read().strip()
+        
+    used = fun()
+    return output[0], used
         

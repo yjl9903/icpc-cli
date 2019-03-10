@@ -43,3 +43,8 @@ FILES = [
         'src': '.\\init.cpp'
     }
 ]
+
+DATA_PATH = '..\\input\\'
+DEFAULT_INPUT = 'in.txt'
+DEFAULT_OUTPUT = 'out.txt'
+DEFAULT_OUTPUT_SIZE = 20
