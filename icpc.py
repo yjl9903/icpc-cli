@@ -1,6 +1,6 @@
 import click
 import os
-from src.config import BASE_PATH, FOLDERS, FILES, CF_PATH, CF_NUMBER, STANDARD_NUMBER
+from src.config import BASE_PATH, FOLDERS, FILES, CF_PATH, CF_NUMBER, STANDARD_NUMBER, OJ_PATH
 from util import mkdir, mkfile, cpfile
 
 @click.group()
@@ -21,6 +21,8 @@ def init(contest, codeforces, folder, number, standard):
         raise Exception('init conflict!')
     if codeforces:
         folder = CF_PATH
+    if folder and folder in OJ_PATH:
+        folder = OJ_PATH[folder]
 
     path = os.path.join(BASE_PATH, folder, contest)
     mkdir(path)
@@ -66,6 +68,8 @@ def open(contest, codeforces, folder):
         raise Exception('open conflict!')
     if codeforces:
         folder = CF_PATH
+    if folder and folder in OJ_PATH:
+        folder = OJ_PATH[folder]
 
     path = os.path.join(BASE_PATH, folder, contest)
         
@@ -73,12 +77,28 @@ def open(contest, codeforces, folder):
     os.system('code ' + path)
     
 @cli.command()
+@click.argument('contest')
+@click.argument('problem')
+def write(contest, problem):
+    click.secho('write %s => %s' % (contest, problem), fg='green')
+
+    if contest and contest in OJ_PATH:
+        contest = OJ_PATH[contest]
+    path = os.path.join(BASE_PATH, contest)
+    problem += '.cpp'
+
+    mkfile(path, file=problem)
+
+    os.system('code ' + path)
+    os.system('code ' + os.path.join(path, problem))
+
+@cli.command()
 def test():
-    click.echo('test')
+    click.secho('test', fg='green')
 
 @cli.command()
 def submit():
-    click.echo('submit')
+    click.secho('submit', fg='green')
 
 if __name__ == '__main__':
     cli()

@@ -1,6 +1,12 @@
 BASE_PATH = 'D:\\5-project\\icpc-cli\\test'
 CF_PATH = 'CodeForces'
 
+OJ_PATH = {
+    'hdu': 'HDu', 'h': 'HDu', 
+    'poj': 'PKu', 'pku': 'PKu', 'p': 'PKu',
+    'zoj': 'ZOJ', 'z': 'ZOJ',
+}
+
 CF_NUMBER = 5 
 # cf contest problem number
 STANDARD_NUMBER = 11
