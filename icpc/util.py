@@ -4,7 +4,7 @@ import shutil
 import time
 from threading import Thread
 
-ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
+ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
 def mkdir(*args, **kwargs):
     path = os.path.join(*args)

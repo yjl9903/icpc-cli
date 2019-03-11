@@ -1,7 +1,7 @@
 import click
 import os
-from src.config import *
-from util import mkdir, mkfile, cpfile, execTest
+from icpc.config import *
+from icpc.util import mkdir, mkfile, cpfile, execTest
 
 @click.group()
 @click.pass_context
@@ -34,10 +34,10 @@ def config(base_path):
     """
     global BASE_PATH
 
-    if base_path and base_path == BASE_PATH:
+    if BASE_PATH and base_path == BASE_PATH:
         return
 
-    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'config.py')
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.py')
 
     click.echo('config file => %s' % config_path)
 
