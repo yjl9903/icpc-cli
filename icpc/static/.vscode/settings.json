@@ -1,7 +1,4 @@
 {
-    // "editor.formatOnPaste": true,
-    // "C_Cpp.clang_format_fallbackStyle": "{BaseOnstyle: Google, TabWidth: 4}",
-
     "[cpp]": {
         "editor.quickSuggestions": true
     },
@@ -9,7 +6,6 @@
         "editor.quickSuggestions": true
     },
     "problems.decorations.enabled": true,
-    "C_Cpp.intelliSenseEngineFallback": "Enabled",
     "files.associations": {
         "iostream": "cpp",
         "ostream": "cpp",
