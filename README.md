@@ -4,9 +4,9 @@
 
 Enjoy a Codeforces round!
 
-![](.\1.gif)
+![](https://github.com/yjl9903/icpc-cli/raw/master/1.gif)
 
-![](.\2.gif)
+![](https://github.com/yjl9903/icpc-cli/raw/master/2.gif)
 
 ## Installation
 
