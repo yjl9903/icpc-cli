@@ -122,6 +122,14 @@ def open(contest, codeforces, folder):
     """
     Open a contest folder.
     """
+
+    # ----------- blog -----------
+    if contest == 'b' or contest == 'blog':
+        click.secho('open blog...', fg='green')
+        os.system('code D:\\blog')
+        return
+    # ----------------------------
+    
     click.secho('open %s...' % (contest), fg='green')
 
     if folder and codeforces:
@@ -252,22 +260,20 @@ def submit():
 
         click.secho('Problem %s submitted...' % inp.upper(), fg='green')
 
-        hasStarted = False
+        last = -1
         while True:
             sid, verdict, useTime, useMemory, passedTest = getLatestVerdict(CF_USER['handle'])
 
-            # click.echo('%d %s %d' % (sid, verdict, passedTest))
-
             if verdict and verdict != 'TESTING':
                 if verdict == 'OK':
-                    click.secho('OK', fg='green')
+                    click.secho('OK!', fg='green')
                 else:
                     click.secho('%s on test %d' % (verdict, passedTest + 1), fg='red')
                 click.secho('%d ms | %d KB' % (useTime, useMemory), fg='green' if verdict == 'OK' else 'red')
                 break
-            elif verdict == 'TESTING' and not hasStarted:
+            elif verdict == 'TESTING' and passedTest > last:
                 click.secho("Judging...", fg='green')
-                hasStarted = True
+                last = passedTest
                 
             time.sleep(0.5)
 
