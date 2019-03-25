@@ -1,10 +1,15 @@
 BASE_PATH = ''
 CF_PATH = 'CodeForces'
 
+CF_USER = {
+    'handle': '', 'password': ''
+}
+
 OJ_PATH = {
     'hdu': 'HDu', 'h': 'HDu', 
     'poj': 'PKu', 'pku': 'PKu', 'p': 'PKu',
     'zoj': 'ZOJ', 'z': 'ZOJ',
+    'loj': 'LibreOJ'
 }
 
 CF_NUMBER = 5 

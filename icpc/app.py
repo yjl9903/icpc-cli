@@ -1,5 +1,6 @@
 import click
 import os
+from robobrowser import RoboBrowser
 from icpc.config import *
 from icpc.util import mkdir, mkfile, cpfile, execTest
 
@@ -193,10 +194,60 @@ def test(problem, input, output, max_print, no_print, time_limit):
 
 @cli.command('submit', short_help='submit your code')
 def submit():
-    click.secho('submit', fg='green')
+    click.secho('Logining...', fg='green')
+
+    if not CF_USER['handle'] or not CF_USER['password']:
+        click.echo('No handle or password...')
+        return 
+
+    browser = RoboBrowser(parser='html.parser')
+    browser.open('http://codeforces.com/enter')
+        
+    enter_form = browser.get_form('enterForm')
+    enter_form['handleOrEmail'] = CF_USER['handle']
+    enter_form['password'] = CF_USER['password']
+    browser.submit_form(enter_form)
+    
+    try:
+	    checks = list(map(lambda x: x.getText()[1:].strip(), browser.select('div.caption.titled')))
+	    if CF_USER['handle'] not in checks:
+	        click.secho('Login Failed!', fg = 'red')
+	        return
+    except Exception as e:
+	    click.secho('Login Failed!', fg = 'red')
+	    return 
+
+    click.secho('Login Success...', fg='green')
+    click.secho('Contest id:')
 
     stdin = click.get_text_stream('stdin')
-    a = stdin.readline()
+
+    try:
+        cid = int(stdin.readline().strip())
+    except Exception as ex:
+        return 
+
+    while True:
+        click.echo('Submit: ')
+        inp = stdin.readline().strip()
+        if inp == 'q' or inp == 'exit' or inp == 'quit':
+            click.echo('quit')
+            return
+
+        browser.open('https://codeforces.com/contest/%d/submit' % cid)
+        submit_form = browser.get_form(class_='submit-form')
+        submit_form['submittedProblemIndex'] = inp.upper()
+
+        try:
+            submit_form['sourceFile'] = inp + '.cpp'
+        except Exception as ex:
+            click.secho('No File', fg='red')
+            return
+        
+        browser.submit_form(submit_form)
+
+        click.secho('Problem %s submitted...' % inp.upper(), fg = 'green')
+
 
 if __name__ == '__main__':
     cli()
