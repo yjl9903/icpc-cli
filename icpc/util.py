@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import time
+import requests
 from threading import Thread
 
 ASSETS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
@@ -82,4 +83,19 @@ def execTest(problem, input, time):
         
     used = fun()
     return output[0], used
-        
+
+def getLatestVerdict(user):
+    r = requests.get('http://codeforces.com/api/user.status?' + 'handle=%s&from=1&count=1' % user)
+    js = r.json()
+    if 'status' not in js or js['status'] != 'OK':
+        raise ConnectionError('Cannot connect to codeforces!')
+    try:
+        result = js['result'][0]
+        id_ = result['id']
+        verdict_ = '' if 'verdict' not in result else result['verdict'] 
+        time_ = result['timeConsumedMillis']
+        memory_ = result['memoryConsumedBytes'] / 1000
+        passedTestCount_ = result['passedTestCount']
+    except Exception as e:
+        raise ConnectionError('Cannot get latest submission!')
+    return id_, verdict_, time_, memory_, passedTestCount_

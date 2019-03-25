@@ -1,8 +1,9 @@
 import click
 import os
+import time
 from robobrowser import RoboBrowser
 from icpc.config import *
-from icpc.util import mkdir, mkfile, cpfile, execTest
+from icpc.util import mkdir, mkfile, cpfile, execTest, getLatestVerdict
 
 @click.group()
 @click.pass_context
@@ -242,11 +243,33 @@ def submit():
             submit_form['sourceFile'] = inp + '.cpp'
         except Exception as ex:
             click.secho('No File', fg='red')
-            return
+            continue
         
         browser.submit_form(submit_form)
+        if browser.url[-2:] != 'my':
+            click.secho('Failed submission', fg='red')
+            continue
 
-        click.secho('Problem %s submitted...' % inp.upper(), fg = 'green')
+        click.secho('Problem %s submitted...' % inp.upper(), fg='green')
+
+        hasStarted = False
+        while True:
+            sid, verdict, useTime, useMemory, passedTest = getLatestVerdict(CF_USER['handle'])
+
+            # click.echo('%d %s %d' % (sid, verdict, passedTest))
+
+            if verdict and verdict != 'TESTING':
+                if verdict == 'OK':
+                    click.secho('OK', fg='green')
+                else:
+                    click.secho('%s on test %d' % (verdict, passedTest + 1), fg='red')
+                click.secho('%d ms | %d KB' % (useTime, useMemory), fg='green' if verdict == 'OK' else 'red')
+                break
+            elif verdict == 'TESTING' and not hasStarted:
+                click.secho("Judging...", fg='green')
+                hasStarted = True
+                
+            time.sleep(0.5)
 
 
 if __name__ == '__main__':
