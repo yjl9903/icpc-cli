@@ -37,9 +37,9 @@ def config(base_path):
     if BASE_PATH and base_path == BASE_PATH:
         return
 
-    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.py')
+    config_path = os.path.dirname(os.path.abspath(__file__))
 
-    click.echo('config file => %s' % config_path)
+    click.echo('Path => %s' % config_path)
 
     if base_path:
         cfg = []
@@ -126,8 +126,9 @@ def open(contest, codeforces, folder):
         raise Exception('open conflict!')
     if codeforces:
         folder = CF_PATH
-    if folder and folder in OJ_PATH:
-        folder = OJ_PATH[folder]
+    if not folder and contest in OJ_PATH:
+        folder = OJ_PATH[contest]
+        contest = ''
 
     path = os.path.join(BASE_PATH, folder, contest)
         
