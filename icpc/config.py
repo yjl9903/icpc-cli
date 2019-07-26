@@ -53,3 +53,4 @@ DATA_PATH = '..\\input\\'
 DEFAULT_INPUT = 'in.txt'
 DEFAULT_OUTPUT = 'out.txt'
 DEFAULT_OUTPUT_SIZE = 20
+DEFAULT_GEN = 'init.exe'

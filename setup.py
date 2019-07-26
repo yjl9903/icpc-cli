@@ -18,5 +18,6 @@ setup(
         init=icpc.app:init
         open=icpc.app:open
         test=icpc.app:test
+        gen=icpc.app:gen
     '''
 )

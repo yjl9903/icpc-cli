@@ -73,13 +73,19 @@ def setTimeLimit(maxTime):
 
 def execTest(problem, input, time):
     if not time:
-        return os.popen('%s <%s' % (problem, input)).read().strip(), 0
+        if input:
+            return os.popen('%s <%s' % (problem, input)).read().strip(), 0
+        else:
+            return os.popen('%s' % problem).read().strip(), 0
         
     output = ['']
 
     @setTimeLimit(20 * 1000)
     def fun():
-        output[0] = os.popen('%s <%s' % (problem, input)).read().strip()
+        if input:
+            output[0] = os.popen('%s <%s' % (problem, input)).read().strip()
+        else:
+            output[0] = os.popen('%s' % problem).read().strip()
         
     used = fun()
     return output[0], used

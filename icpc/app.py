@@ -193,13 +193,32 @@ def test(problem, input, output, max_print, no_print, time_limit):
     else:
         s = s.split('\n')
         for item in s[:max_print]:
-            click.echo(item)
+            if len(item) >= 100:
+                click.echo(item[:100] + ' .....')
+            else:
+                click.echo(item)
         rest = len(s) - max_print
         if rest > 0:
             click.echo('<%d lines in %s>' % (rest, input))
 
     if time_limit:
         click.echo('Time: %dms' % t)
+
+@cli.command('gen', short_help='generate test data')
+@click.option('--exe', '-e', default=DEFAULT_GEN)
+@click.option('--output', '-o', default=DEFAULT_INPUT)
+def gen(exe, output):
+    """
+    Generate your test case
+    """
+    click.secho('Generate => %s...' % (exe.rstrip('.exe')), fg='green')
+
+    output = os.path.join(DATA_PATH, output)
+
+    s, t = execTest(exe, '', 0)
+
+    with click.open_file(output, 'w') as f:
+        f.write(s)
 
 @cli.command('submit', short_help='submit your code')
 def submit():
